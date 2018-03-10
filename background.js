@@ -1,6 +1,3 @@
-let hostnameTimeMap = new Map();
-let openedDate;
-
 function checkHostTime(hostnameTimeMap, hostname) {
     if (hostnameTimeMap.has(hostname)) {
         return hostnameTimeMap.get(hostname)
@@ -30,28 +27,33 @@ function getCurrentTabHostname(callback) {
     });
 }
 
-function showHostname(hostname) {
-    console.log(hostname);
-    const par = document.querySelector("#domainName");
-    par.textContent = hostname;
+function checkCurrentHostname(tabId) {
+    chrome.tabs.get(tabId, function(tab) {
+        const url = new URL(tab.url);
+        let currentHostname = url.hostname;
+        console.log(lastTabHostname);
+        // if (currentHostname !== lastTabHostname) {
+        //     updateHostnameTime(lastTabHostname);
+        // }
+    });
 }
+
+
+browser.tabs.onActivated.addListener(function (activeInfo) {
+    let tabId = activeInfo.tabId;
+    checkCurrentHostname(tabId);
+});
+
+// function showHostname(hostname) {
+//     console.log(hostname);
+//     const par = document.querySelector("#domainName");
+//     par.textContent = hostname;
+// }
 
 // document.addEventListener("DOMContentLoaded", () => {
 //     getCurrentTabHostname(showHostname)
 // });
 
-browser.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-    alert(changeInfo.url);
-});
-
-browser.tabs.onActivated.addListener(function (activeInfo) {
-    // let tabId = activeInfo.tabId;
-    // chrome.tabs.get(tabId, function(tab) {
-    //     console.log("foo");
-    //     const url = new URL(tab.url);
-    //     showHostname(url.hostname);
-    // });
-    browser.tabs.create({
-        url : "http://chilloutandwatchsomecatgifs.com/"
-    });
-});
+// browser.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+//     alert(changeInfo.url);
+// });
