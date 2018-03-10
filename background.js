@@ -1,30 +1,17 @@
-function checkHostTime(hostnameTimeMap, hostname) {
-    if (hostnameTimeMap.has(hostname)) {
-        return hostnameTimeMap.get(hostname)
-    } else {
-        hostnameTimeMap.set("hostname", 0);
-        return 0;
-    }
+function onGot(item) {
+    console.log(item);
 }
 
-function newTabOpen(hostname) { // called from getCurrentTabHostname
-    openedDate = new Date();
-}
-
-function changeHostTimeOnClose(hostnameTimeMap, hostname, timeDuration) {
+function getOldHostname() {
 
 }
+browser.storage.local.set({
+    kitten:  {name:"Mog", eats:"mice"},
+    monster: {name:"Kraken", eats:"people"}
+});
 
-function getCurrentTabHostname(callback) {
-    const queryInfo = {
-        active: true,
-        currentWindow: true
-    };
-    browser.tabs.query(queryInfo, tabs => {
-        const tab = tabs[0];
-        const url = new URL(tab.url);
-        callback(url.hostname); // we call newTabOpen here
-    });
+function onError(error) {
+    console.log(`Error: ${error}`);
 }
 
 function checkCurrentHostname(tabId) {
@@ -57,3 +44,32 @@ browser.tabs.onActivated.addListener(function (activeInfo) {
 // browser.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 //     alert(changeInfo.url);
 // });
+//
+// function checkHostTime(hostnameTimeMap, hostname) {
+//     if (hostnameTimeMap.has(hostname)) {
+//         return hostnameTimeMap.get(hostname)
+//     } else {
+//         hostnameTimeMap.set("hostname", 0);
+//         return 0;
+//     }
+// }
+//
+// function newTabOpen(hostname) { // called from getCurrentTabHostname
+//     openedDate = new Date();
+// }
+//
+// function changeHostTimeOnClose(hostnameTimeMap, hostname, timeDuration) {
+//
+// }
+//
+// function getCurrentTabHostname(callback) {
+//     const queryInfo = {
+//         active: true,
+//         currentWindow: true
+//     };
+//     browser.tabs.query(queryInfo, tabs => {
+//         const tab = tabs[0];
+//         const url = new URL(tab.url);
+//         callback(url.hostname); // we call newTabOpen here
+//     });
+// }
