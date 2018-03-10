@@ -19,9 +19,17 @@ function checkCurrentHostname(tabId) {
         const url = new URL(tab.url);
         let currentHostname = url.hostname;
         console.log(lastTabHostname);
-        // if (currentHostname !== lastTabHostname) {
-        //     updateHostnameTime(lastTabHostname);
-        // }
+        if (currentHostname !== getLastHostname()){
+            let lastHostname = getLastHostname();
+            let currentTimestamp = (new Date().getTime());
+            let previousTimestamp = getPreviousTimestamp(lastHostname);
+
+            let timeSpent = currentTimestamp - previousTimestamp;
+
+            setCurrentTimestamp(currentHostname);
+            addToTimeSpent(lastHostname, getTimeSpent(lastHostname) + timeSpent);
+            setLastHostname(currentHostname);
+        }
     });
 }
 
