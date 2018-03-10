@@ -1,9 +1,9 @@
 {
     "manifest_version": 2,
   
-    "name": "Getting started example",
-    "description": "This extension allows the user to change the background color of the current page.",
-    "version": "1.0",
+    "name": "Time Saver",
+    "description": "This extension bla bla bla.",
+    "version": "0.000001",
   
     "browser_action": {
       "default_icon": "icon.png",
@@ -12,6 +12,7 @@
     },
     "permissions": [
       "activeTab",
-      "storage"
+      "storage",
+      "tabs"
     ]
   }
