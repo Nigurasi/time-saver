@@ -14,5 +14,9 @@
       "activeTab",
       "storage",
       "tabs"
-    ]
+    ],
+  "background": {
+    "scripts": ["background.js"]
   }
+
+}
