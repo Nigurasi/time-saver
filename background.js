@@ -27,14 +27,28 @@ function getCurrentTabHostname(callback) {
     });
 }
 
+function checkCurrentHostnameHasToBeBlocked(tabId) {
+    browser.tabs.get(tabId, function(tab) {
+        const url = new URL(tab.url);
+        let currentHostname = url.hostname;
+
+        let maximumTime = getMaximumTime(currentHostname);
+        let currentTime = getTimestamp(currentHostname);
+
+        if(currentTime >= maximumTime){
+            window.location = "https://www.catgifpage.com/";
+        }
+    });
+}
+
 function checkCurrentHostname(tabId) {
-    chrome.tabs.get(tabId, function(tab) {
+    browser.tabs.get(tabId, function(tab) {
         const url = new URL(tab.url);
         let currentHostname = url.hostname;
         console.log(lastTabHostname);
         if (currentHostname !== getLastHostname()){
             let lastHostname = getLastHostname();
-            let currentTimestamp = (new Date().getTime());
+            let currentTimestamp = (Date.now());
             let previousTimestamp = getPreviousTimestamp(lastHostname);
 
             let timeSpent = currentTimestamp - previousTimestamp;
