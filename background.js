@@ -1,4 +1,4 @@
-function getLastHostnamePromise(callback) {
+function getLastHostnamePromise() {
     return browser.storage.local.get("oldHostname");
 }
 
@@ -66,20 +66,6 @@ function checkHostname(currentHostname) {
     });
 }
 
-function getCurrentHostname(tabId) {
-    browser.tabs.get(tabId, function(tab) {
-function getCurrentTabHostname(callback) {
-    const queryInfo = {
-        active: true,
-        currentWindow: true
-    };
-    browser.tabs.query(queryInfo, tabs => {
-        const tab = tabs[0];
-        const url = new URL(tab.url);
-        callback(url.hostname); // we call newTabOpen here
-    });
-}
-
 function checkCurrentHostnameHasToBeBlocked(tabId) {
     browser.tabs.get(tabId, function(tab) {
         const url = new URL(tab.url);
@@ -104,5 +90,5 @@ function checkCurrentHostname(tabId) {
 
 browser.tabs.onActivated.addListener(function (activeInfo) {
     let tabId = activeInfo.tabId;
-    getCurrentHostname(tabId);
+    checkCurrentHostname(tabId);
 });
