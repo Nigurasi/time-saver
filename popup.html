@@ -8,14 +8,23 @@
 <h1>Time Saver</h1>
 <p id="domainName">Domain name</p>
 
-<p id="firstCategoryName">First Category</p>
+<!--<p id="firstCategoryName">First Category</p>-->
 <!--<textarea label="URL to block" id="firstCategory" cols="10" rows="2"></textarea>-->
-    <!--<input type="button" value="Change">-->
+<!--<input type="button" value="Change">-->
 <form>
-    URL to block:<br>
-    <input type="text" name="url"><br>
-    Hours:<br>
-    <input type="text" name="hours">
+    <div>
+        <label for="url">URL to block: </label>
+        <input type="text" id="url" name="url" required>
+        <span class="validity"></span>
+    </div>
+    <div>
+        <label for="time">Time: </label>
+        <input type="time" id="time" name="time" required>
+        <span class="validity"></span>
+    </div>
+    <div>
+        <button>Add</button>
+    </div>
 </form>
 <script src="popup.js"></script>
 </body>
