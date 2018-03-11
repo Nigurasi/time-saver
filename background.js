@@ -97,6 +97,7 @@ function checkCurrentHostnameHasToBeBlocked(currentHostname) {
                         }
                         if (oldTimeSpent >= maximumTime){
                             console.log("too much time spent on " + currentHostname);
+                            window.location.replace("https://www.catgifpage.com/");
                             // window.location = "https://www.catgifpage.com/";
                         }
                     }
