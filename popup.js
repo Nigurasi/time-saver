@@ -19,3 +19,41 @@
 // document.addEventListener("DOMContentLoaded", () => {
 //     getCurrentTabHostname(showHostname)
 // });
+
+document.getElementById("addButton").addEventListener("click", addToBlocked);
+
+function getTimeSpentPromise(lastHostname) {
+    return browser.storage.local.get(lastHostname + "-spent");
+}
+
+function setMaximumTimePromise(currentHostname, timeSpent) {
+    let maxObj;
+    getTimeSpentPromise(currentHostname).then(maximumTimeObj => {
+        maxObj = maximumTimeObj;
+    });
+    if (maxObj === undefined) {
+        maxObj = {max : {}}
+    }
+    maxObj.max[currentHostname] = timeSpent;
+    browser.storage.local.set(maxObj).then(() => {
+        console.log("max for " + currentHostname + " is now " + timeSpent);
+    });
+}
+
+function addToBlocked() {
+    console.log("clicked");
+
+    let urlToBlock = document.getElementById("url").value;
+    let timeTilUnblock = document.getElementById("time").value;
+    let maksTime = timeTilUnblock * 3600 * 1000
+    console.log(urlToBlock);
+    console.log(maksTime);
+
+    const url = new URL(urlToBlock);
+    const hostname = url.hostname;
+    console.log(hostname);
+
+    setMaximumTimePromise(hostname, maksTime).then(() =>{
+        console.log("ok");
+    });
+}
