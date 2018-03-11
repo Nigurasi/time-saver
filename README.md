@@ -3,6 +3,10 @@
 ## tl;dr
 An unbeliably awesome extension for Mozilla Firefox. Should've work on Chrome but it just doesn't. We've lost 7 hours of our lives trying to figure it out. 
 
+## Introduction
+Do you think we didn't have time to create tremendously marvelous icon? Nothing more misleading. This is furious red dot.
+It's furious with you. You dare to ask why?! Because You need it! But don't worry. She will punish you. P-A-I-N-F-U-L-L-Y.
+
 ## Description
 An extension for websites made to punish You for entertainment and having fun. Just kidding(or are we?). Made to increase Your productivity. 
 
