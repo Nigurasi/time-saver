@@ -25,7 +25,7 @@ function addToBlocked() {
     let urlToBlock = document.getElementById("url").value;
     let timeTilUnblock = document.getElementById("time").value;
     // let maxTime = timeTilUnblock * 3600 * 1000
-    let maxTime = timeTilUnblock * 1000 * 60
+    let maxTime = timeTilUnblock * 1000 * 60;
     console.log(urlToBlock);
     console.log(maxTime);
 
