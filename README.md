@@ -35,7 +35,7 @@ Download or clone the code. Then, do as Your website says so.
 
 ## How To Use
 
-The extension constantly monitors your procrastination. To set max value until it will stop you from doing nothing.
+The extension constantly monitors your procrastination. To set max value until it will stop you from doing nothing, fill these boxes and click the button.
 
 ![](./how-to-use.png)
 
