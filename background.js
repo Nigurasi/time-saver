@@ -35,6 +35,18 @@ function getMaximumTimePromise() {
     return browser.storage.local.get("max");
 }
 
+function setMaximumTimePromise(currentHostname, timeSpent) {
+    getMaximumTimePromise().then(maximumTimeObj => {
+        if (maximumTimeObj.max === undefined) {
+            maximumTimeObj.max = {};
+        }
+        maximumTimeObj.max[currentHostname] = timeSpent;
+        browser.storage.local.set(maximumTimeObj).then(() => {
+            console.log("max for " + currentHostname + " is now " + timeSpent);
+        });
+    });
+}
+
 function checkHostname(currentHostname) {
     getLastHostnamePromise().then(lastHostnameObj => {
         let lastHostname = lastHostnameObj.oldHostname;
@@ -68,7 +80,7 @@ function checkHostname(currentHostname) {
 }
 
 function checkCurrentHostnameHasToBeBlocked(currentHostname, tabId) {
-    getMaximumTimePromise(currentHostname).then(maximumTimeObj => {
+    getMaximumTimePromise().then(maximumTimeObj => {
         if (maximumTimeObj.max !== undefined) {
             let maximumTime = maximumTimeObj.max[currentHostname];
             if (maximumTime !== undefined) {

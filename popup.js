@@ -7,16 +7,14 @@ function getMaximumTimePromise() {
 }
 
 function setMaximumTimePromise(currentHostname, timeSpent) {
-    let maxObj;
-    getTimeSpentPromise(currentHostname).then(maximumTimeObj => {
-        maxObj = maximumTimeObj;
-    });
-    if (maxObj === undefined) {
-        maxObj = {max : {}}
-    }
-    maxObj.max[currentHostname] = timeSpent;
-    browser.storage.local.set(maxObj).then(() => {
-        console.log("max for " + currentHostname + " is now " + timeSpent);
+    getMaximumTimePromise().then(maximumTimeObj => {
+        if (maximumTimeObj.max === undefined) {
+            maximumTimeObj.max = {};
+        }
+        maximumTimeObj.max[currentHostname] = timeSpent;
+        browser.storage.local.set(maximumTimeObj).then(() => {
+            console.log("max for " + currentHostname + " is now " + timeSpent);
+        });
     });
 }
 
