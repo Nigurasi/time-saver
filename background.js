@@ -1,83 +1,80 @@
-function onGot(item) {
-    console.log(item);
+function getLastHostnamePromise(callback) {
+    return browser.storage.local.get("oldHostname");
 }
 
-function getOldHostname() {
-
-}
-browser.storage.local.set({
-    kitten:  {name:"Mog", eats:"mice"},
-    monster: {name:"Kraken", eats:"people"}
-});
-
-function onError(error) {
-    console.log(`Error: ${error}`);
+function getPreviousTimestampPromise(lastHostname) {
+    return browser.storage.local.get(lastHostname + "-stamp");
 }
 
-function checkCurrentHostname(tabId) {
-    chrome.tabs.get(tabId, function(tab) {
-        const url = new URL(tab.url);
-        let currentHostname = url.hostname;
-        console.log(lastTabHostname);
-        if (currentHostname !== getLastHostname()){
-            let lastHostname = getLastHostname();
-            let currentTimestamp = (new Date().getTime());
-            let previousTimestamp = getPreviousTimestamp(lastHostname);
+function getTimeSpentPromise(lastHostname) {
+    return browser.storage.local.get(lastHostname + "-spent");
+}
 
-            let timeSpent = currentTimestamp - previousTimestamp;
+function setCurrentTimestamp(currentHostname, currentTimestamp) {
+    let currentHostnameStamp = currentHostname + "-stamp";
+    return browser.storage.local.set({
+        [currentHostnameStamp] : currentTimestamp
+    });
+}
 
-            setCurrentTimestamp(currentHostname);
-            addToTimeSpent(lastHostname, getTimeSpent(lastHostname) + timeSpent);
-            setLastHostname(currentHostname);
+function setTimeSpent(lastHostname, timeSpent) {
+    let currentHostnameSpent = lastHostname + "-spent";
+    return browser.storage.local.set({
+        [currentHostnameSpent] : timeSpent
+    });
+}
+
+function setLastHostname(hostname) {
+    return browser.storage.local.set({
+        "oldHostname" : hostname
+    });
+}
+
+function checkHostname(currentHostname) {
+    getLastHostnamePromise().then(lastHostnameObj => {
+        let lastHostname = lastHostnameObj.oldHostname;
+        if (lastHostname === "") {
+            lastHostname = "default";
+        }
+        console.log("old hostname " + lastHostname);
+        if (lastHostname !== currentHostname) {
+            let currentTimestamp = Date.now();
+            getPreviousTimestampPromise(lastHostname).then(previousTimestampObj => {
+                let previousTimestamp = previousTimestampObj[lastHostname + "-stamp"];
+                if (previousTimestamp === undefined) {
+                    previousTimestamp = Date.now();
+                }
+                console.log("previousTimestamp " + previousTimestamp);
+                setCurrentTimestamp(currentHostname, currentTimestamp).then(() => {
+                    let timeSpent = currentTimestamp - previousTimestamp;
+                    console.log("timeSpent " + timeSpent);
+                    getTimeSpentPromise(lastHostname).then(oldTimeSpentObj => {
+                        let oldTimeSpent = oldTimeSpentObj[lastHostname + "-spent"];
+                        if (isNaN(oldTimeSpent)) {
+                            oldTimeSpent = 0;
+                        }
+                        console.log("oldTimeSpent " + oldTimeSpent);
+                        setTimeSpent(lastHostname, oldTimeSpent + timeSpent).then(() => {
+                            setLastHostname(currentHostname).then(() => {
+                                console.log("ok");
+                            });
+                        });
+                    });
+                });
+            })
         }
     });
 }
 
+function getCurrentHostname(tabId) {
+    browser.tabs.get(tabId, function(tab) {
+        const url = new URL(tab.url);
+        let currentHostname = url.hostname;
+        checkHostname(currentHostname);
+    });
+}
 
 browser.tabs.onActivated.addListener(function (activeInfo) {
     let tabId = activeInfo.tabId;
-    checkCurrentHostname(tabId);
+    getCurrentHostname(tabId);
 });
-
-// function showHostname(hostname) {
-//     console.log(hostname);
-//     const par = document.querySelector("#domainName");
-//     par.textContent = hostname;
-// }
-
-// document.addEventListener("DOMContentLoaded", () => {
-//     getCurrentTabHostname(showHostname)
-// });
-
-// browser.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-//     alert(changeInfo.url);
-// });
-//
-// function checkHostTime(hostnameTimeMap, hostname) {
-//     if (hostnameTimeMap.has(hostname)) {
-//         return hostnameTimeMap.get(hostname)
-//     } else {
-//         hostnameTimeMap.set("hostname", 0);
-//         return 0;
-//     }
-// }
-//
-// function newTabOpen(hostname) { // called from getCurrentTabHostname
-//     openedDate = new Date();
-// }
-//
-// function changeHostTimeOnClose(hostnameTimeMap, hostname, timeDuration) {
-//
-// }
-//
-// function getCurrentTabHostname(callback) {
-//     const queryInfo = {
-//         active: true,
-//         currentWindow: true
-//     };
-//     browser.tabs.query(queryInfo, tabs => {
-//         const tab = tabs[0];
-//         const url = new URL(tab.url);
-//         callback(url.hostname); // we call newTabOpen here
-//     });
-// }
