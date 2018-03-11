@@ -68,6 +68,34 @@ function checkHostname(currentHostname) {
 
 function getCurrentHostname(tabId) {
     browser.tabs.get(tabId, function(tab) {
+function getCurrentTabHostname(callback) {
+    const queryInfo = {
+        active: true,
+        currentWindow: true
+    };
+    browser.tabs.query(queryInfo, tabs => {
+        const tab = tabs[0];
+        const url = new URL(tab.url);
+        callback(url.hostname); // we call newTabOpen here
+    });
+}
+
+function checkCurrentHostnameHasToBeBlocked(tabId) {
+    browser.tabs.get(tabId, function(tab) {
+        const url = new URL(tab.url);
+        let currentHostname = url.hostname;
+
+        let maximumTime = getMaximumTime(currentHostname);
+        let currentTime = getTimestamp(currentHostname);
+
+        if(currentTime >= maximumTime){
+            window.location = "https://www.catgifpage.com/";
+        }
+    });
+}
+
+function checkCurrentHostname(tabId) {
+    browser.tabs.get(tabId, function(tab) {
         const url = new URL(tab.url);
         let currentHostname = url.hostname;
         checkHostname(currentHostname);
