@@ -39,6 +39,12 @@ The extension constantly monitors your procrastination. To set max value until i
 
 ![](./how-to-use.png)
 
+## What will be next
+- categories
+- reach statistics
+- unable to uninstall extension
+- more cat gifs
+
 ## Summary
 
 ![](http://28oa9i1t08037ue3m1l0i861.wpengine.netdna-cdn.com/wp-content/uploads/2015/03/HS5.png)
