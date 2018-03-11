@@ -1,3 +1,4 @@
+
 function getLastHostnamePromise() {
     return browser.storage.local.get("oldHostname");
 }
@@ -27,6 +28,24 @@ function setTimeSpent(lastHostname, timeSpent) {
 function setLastHostname(hostname) {
     return browser.storage.local.set({
         "oldHostname" : hostname
+    });
+}
+
+function getMaximumTimePromise(currentHostname) {
+    return browser.storage.local.get("max");
+}
+
+function setMaximumTimePromise(currentHostname, timeSpent) {
+    let maxObj;
+    getTimeSpentPromise(currentHostname).then(maximumTimeObj => {
+        maxObj = maximumTimeObj;
+    });
+    if (maxObj === undefined) {
+        maxObj = {max : {}}
+    }
+    maxObj.max[currentHostname] = timeSpent;
+    browser.storage.local.set(maxObj).then(() => {
+        console.log("max for " + currentHostname + " is now " + timeSpent);
     });
 }
 
@@ -66,29 +85,37 @@ function checkHostname(currentHostname) {
     });
 }
 
-function checkCurrentHostnameHasToBeBlocked(tabId) {
-    browser.tabs.get(tabId, function(tab) {
-        const url = new URL(tab.url);
-        let currentHostname = url.hostname;
-
-        let maximumTime = getMaximumTime(currentHostname);
-        let currentTime = getTimestamp(currentHostname);
-
-        if(currentTime >= maximumTime){
-            window.location = "https://www.catgifpage.com/";
+function checkCurrentHostnameHasToBeBlocked(currentHostname) {
+    getMaximumTimePromise(currentHostname).then(maximumTimeObj => {
+        if (maximumTimeObj.max !== undefined) {
+            let maximumTime = maximumTimeObj.max[currentHostname];
+            if (maximumTime !== undefined) {
+                getTimeSpentPromise(currentHostname).then(oldTimeSpentObj => {
+                        let oldTimeSpent = oldTimeSpentObj[currentHostname + "-spent"];
+                        if (isNaN(oldTimeSpent)) {
+                            oldTimeSpent = 0;
+                        }
+                        if (oldTimeSpent >= maximumTime){
+                            console.log("too much time spent on " + currentHostname);
+                            // window.location = "https://www.catgifpage.com/";
+                        }
+                    }
+                );
+            }
         }
     });
 }
 
 function checkCurrentHostname(tabId) {
-    browser.tabs.get(tabId, function(tab) {
+    browser.tabs.get(tabId, tab => {
         const url = new URL(tab.url);
         let currentHostname = url.hostname;
         checkHostname(currentHostname);
+        checkCurrentHostnameHasToBeBlocked(currentHostname);
     });
 }
 
-browser.tabs.onActivated.addListener(function (activeInfo) {
+browser.tabs.onActivated.addListener(activeInfo => {
     let tabId = activeInfo.tabId;
     checkCurrentHostname(tabId);
 });
