@@ -35,7 +35,9 @@ Download or clone the code. Then, do as Your website says so.
 
 ## How To Use
 
-<to be created>
+The extension constantly monitors your procrastination. To set max value until it will stop you from doing nothing.
+
+![](how-to-use.png)
 
 ## Summary
 
