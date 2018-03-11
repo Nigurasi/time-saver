@@ -31,22 +31,8 @@ function setLastHostname(hostname) {
     });
 }
 
-function getMaximumTimePromise(currentHostname) {
+function getMaximumTimePromise() {
     return browser.storage.local.get("max");
-}
-
-function setMaximumTimePromise(currentHostname, timeSpent) {
-    let maxObj;
-    getTimeSpentPromise(currentHostname).then(maximumTimeObj => {
-        maxObj = maximumTimeObj;
-    });
-    if (maxObj === undefined) {
-        maxObj = {max : {}}
-    }
-    maxObj.max[currentHostname] = timeSpent;
-    browser.storage.local.set(maxObj).then(() => {
-        console.log("max for " + currentHostname + " is now " + timeSpent);
-    });
 }
 
 function checkHostname(currentHostname) {
@@ -55,7 +41,6 @@ function checkHostname(currentHostname) {
         if (lastHostname === "") {
             lastHostname = "default";
         }
-        console.log("old hostname " + lastHostname);
         if (lastHostname !== currentHostname) {
             let currentTimestamp = Date.now();
             getPreviousTimestampPromise(lastHostname).then(previousTimestampObj => {
@@ -63,16 +48,13 @@ function checkHostname(currentHostname) {
                 if (previousTimestamp === undefined) {
                     previousTimestamp = Date.now();
                 }
-                console.log("previousTimestamp " + previousTimestamp);
                 setCurrentTimestamp(currentHostname, currentTimestamp).then(() => {
                     let timeSpent = currentTimestamp - previousTimestamp;
-                    console.log("timeSpent " + timeSpent);
                     getTimeSpentPromise(lastHostname).then(oldTimeSpentObj => {
                         let oldTimeSpent = oldTimeSpentObj[lastHostname + "-spent"];
                         if (isNaN(oldTimeSpent)) {
                             oldTimeSpent = 0;
                         }
-                        console.log("oldTimeSpent " + oldTimeSpent);
                         setTimeSpent(lastHostname, oldTimeSpent + timeSpent).then(() => {
                             setLastHostname(currentHostname).then(() => {
                                 console.log("ok");
