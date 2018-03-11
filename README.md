@@ -33,7 +33,7 @@ Download or clone the code. Then, do as Your website says so.
 
 <to be created>
 
-##Summary
+## Summary
 
 ![](http://28oa9i1t08037ue3m1l0i861.wpengine.netdna-cdn.com/wp-content/uploads/2015/03/HS5.png)
 
