@@ -21,17 +21,17 @@ function setMaximumTimePromise(currentHostname, timeSpent) {
 }
 
 function addToBlocked() {
-    console.log("clicked");
+    // console.log("clicked");
 
     let urlToBlock = document.getElementById("url").value;
     let timeTilUnblock = document.getElementById("time").value;
     let maxTime = timeTilUnblock * 1000 * 60;
-    console.log(urlToBlock);
-    console.log(maxTime);
+    // console.log(urlToBlock);
+    // console.log(maxTime);
 
     const url = new URL(urlToBlock);
     const hostname = url.hostname;
-    console.log(hostname);
+    // console.log(hostname);
 
     setMaximumTimePromise(hostname, maxTime);
 }
