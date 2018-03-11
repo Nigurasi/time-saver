@@ -85,7 +85,7 @@ function checkHostname(currentHostname) {
     });
 }
 
-function checkCurrentHostnameHasToBeBlocked(currentHostname) {
+function checkCurrentHostnameHasToBeBlocked(currentHostname, tabId) {
     getMaximumTimePromise(currentHostname).then(maximumTimeObj => {
         if (maximumTimeObj.max !== undefined) {
             let maximumTime = maximumTimeObj.max[currentHostname];
@@ -95,10 +95,9 @@ function checkCurrentHostnameHasToBeBlocked(currentHostname) {
                         if (isNaN(oldTimeSpent)) {
                             oldTimeSpent = 0;
                         }
-                        if (oldTimeSpent >= maximumTime){
+                        if (oldTimeSpent >= maximumTime) {
                             console.log("too much time spent on " + currentHostname);
-                            window.location.replace("https://www.catgifpage.com/");
-                            // window.location = "https://www.catgifpage.com/";
+                            browser.tabs.update(tabId, {url: "https://www.catgifpage.com/"});
                         }
                     }
                 );
@@ -112,7 +111,7 @@ function checkCurrentHostname(tabId) {
         const url = new URL(tab.url);
         let currentHostname = url.hostname;
         checkHostname(currentHostname);
-        checkCurrentHostnameHasToBeBlocked(currentHostname);
+        checkCurrentHostnameHasToBeBlocked(currentHostname, tabId);
     });
 }
 
