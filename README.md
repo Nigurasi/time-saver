@@ -49,3 +49,5 @@ The extension constantly monitors your procrastination. To set max value until i
 
 ![](http://28oa9i1t08037ue3m1l0i861.wpengine.netdna-cdn.com/wp-content/uploads/2015/03/HS5.png)
 
+(No cats were injured during the production.)
+

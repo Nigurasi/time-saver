@@ -1,8 +1,9 @@
-
-document.getElementById("addButton").addEventListener("click", addToBlocked);
-
 function getTimeSpentPromise(lastHostname) {
     return browser.storage.local.get(lastHostname + "-spent");
+}
+
+function getMaximumTimePromise() {
+    return browser.storage.local.get("max");
 }
 
 function setMaximumTimePromise(currentHostname, timeSpent) {
@@ -24,7 +25,6 @@ function addToBlocked() {
 
     let urlToBlock = document.getElementById("url").value;
     let timeTilUnblock = document.getElementById("time").value;
-    // let maxTime = timeTilUnblock * 3600 * 1000
     let maxTime = timeTilUnblock * 1000 * 60;
     console.log(urlToBlock);
     console.log(maxTime);
@@ -36,24 +36,20 @@ function addToBlocked() {
     setMaximumTimePromise(hostname, maxTime);
 }
 
-// function getCurrentTabHostname(callback) {
-//     const queryInfo = {
-//         active: true,
-//         currentWindow: true
-//     };
-//     chrome.tabs.query(queryInfo, tabs => {
-//         const tab = tabs[0];
-//         const url = new URL(tab.url);
-//         callback(url.hostname); // we call newTabOpen here
-//     });
-// }
-//
-// function showHostname(hostname) {
-//     console.log(hostname);
-//     const par = document.querySelector("#domainName");
-//     par.textContent = hostname;
-// }
-//
-// document.addEventListener("DOMContentLoaded", () => {
-//     getCurrentTabHostname(showHostname)
-// });
+document.getElementById("addButton").addEventListener("click", addToBlocked);
+
+let list = document.createElement('ul');
+document.body.appendChild(list);
+
+getMaximumTimePromise().then(maximumTimeObj => {
+    if (maximumTimeObj.max !== undefined) {
+        let pairsList = _.toPairs(maximumTimeObj.max);
+        for (let i = 0; i < pairsList.length; i++) {
+            let listItem = document.createElement('li');
+            let hostname = pairsList[i][0];
+            let time = pairsList[i][1] / (1000 * 60);
+            listItem.textContent = hostname + " : " + time + " min"
+            list.appendChild(listItem);
+        }
+    }
+});
